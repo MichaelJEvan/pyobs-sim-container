@@ -1,0 +1,34 @@
+{include _environment.yaml}
+
+# One process running both modules, each with its own XMPP account.
+class: pyobs.modules.MultiModule
+
+modules:
+
+  telescope:
+    # 2.0 split DummyTelescope into DummyRaDecTelescope / DummyAltAzTelescope /
+    # DummySolarTelescope. SimWorld and SimTelescope are gone -- position and
+    # speed are arguments to the module itself now, so there is no shared world.
+    class: pyobs.modules.telescope.DummyRaDecTelescope
+    position: [37.954, 89.264]     # Polaris, where the 1.54 sim also started
+    speed: 3.0                     # degrees/sec, as on the HP
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: telescope@localhost
+      server: ejabberd:5222        # a separate container: the JID domain is not
+      password: pyobs              # the network address
+
+  camera:
+    class: pyobs.modules.camera.DummyCamera
+    telescope: telescope           # named module, not a shared world object
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: camera@localhost
+      server: ejabberd:5222
+      password: pyobs
+    vfs:
+      class: pyobs.vfs.VirtualFileSystem
+      roots:
+        cache:
+          class: pyobs.vfs.LocalFile
+          root: /work/cache

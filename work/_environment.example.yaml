@@ -1,0 +1,17 @@
+# Where the simulated observatory is.
+#
+# The container copies this to _environment.yaml on first start, so a fresh
+# clone runs without any setup. To use your own site, edit _environment.yaml
+# -- it is gitignored, so your location never goes back to the repository.
+#
+# The default is McDonald Observatory in Texas, home of MONET/North, one of
+# the telescopes pyobs actually runs. It is a real place with a real sky, and
+# it is not anybody's house. Do not put 0/0/0 here -- that is a spot in the
+# Atlantic, and every target ends up in the wrong part of the sky.
+
+timezone: utc
+
+location:
+  longitude: -104.0217           # degrees east, negative for west
+  latitude: 30.6716              # degrees north, negative for south
+  elevation: 2076                # metres above sea level

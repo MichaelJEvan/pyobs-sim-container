@@ -1,0 +1,63 @@
+# A pyobs 2.0.0 simulator: one telescope, one camera, and the XMPP server they
+# talk through. Modelled on pyobs's own tests/xmpp/docker-compose.yml.
+#
+#   docker compose up -d      start both
+#   docker compose logs -f sim
+#   docker compose down       delete both
+
+services:
+
+  ejabberd:
+    # The arm64 build. ejabberd/ecs (which pyobs uses) is amd64-only, and under
+    # emulation ejabberdctl segfaults -- which silently breaks the account
+    # creation below, with no error anywhere.
+    image: ghcr.io/processone/ejabberd:latest
+    container_name: sim20-ejabberd
+    ports:
+      - "5222:5222"
+    volumes:
+      - ./ejabberd/ejabberd.yml:/opt/ejabberd/conf/ejabberd.yml:ro
+    environment:
+      # CTL_ON_START, not CTL_ON_CREATE: the image ships its database directory,
+      # so ejabberdctl's first-run check is always false and CTL_ON_CREATE never
+      # fires. Commands are separated by " ; " -- NOT by newlines. The "!" prefix
+      # means a failure is logged and ignored rather than halting the node, which
+      # matters because register fails with a conflict on every restart.
+      #
+      # srg_create/srg_user_add put every account in one shared roster group.
+      # This is required, not cosmetic: XmppComm never sends subscription
+      # requests, so without it the modules connect but cannot see each other.
+      CTL_ON_START: >-
+        ! register telescope localhost pyobs ;
+        ! register camera localhost pyobs ;
+        ! register stellarium localhost pyobs ;
+        ! register scratch localhost pyobs ;
+        ! register console localhost pyobs ;
+        srg_create all localhost all all all ;
+        srg_user_add @all@ localhost all localhost
+    healthcheck:
+      test: ["CMD", "ejabberdctl", "status"]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+      # 10 s, not less: ejabberdctl run too early collides with the control
+      # socket ejabberd is still creating, and the node dies on startup.
+      start_period: 10s
+
+  sim:
+    build: ./sim
+    container_name: sim20-sim
+    # Wait for ejabberd to be *ready*, not merely started. A plain "- ejabberd"
+    # lets pyobs start against a server that is not listening yet.
+    depends_on:
+      ejabberd:
+        condition: service_healthy
+    volumes:
+      - ./work:/work               # your Mac folder, seen as /work inside
+    # telcam.yaml opens with `{include _environment.yaml}`, a hard include, so
+    # the sim will not start without it -- and that file is gitignored, because
+    # it holds a real observing location. Create it from the example on first
+    # run: a fresh clone works with no setup step, and nobody's coordinates
+    # can be committed by accident.
+    command: ["sh", "-c",
+              "[ -f /work/_environment.yaml ] || cp /work/_environment.example.yaml /work/_environment.yaml; exec pyobs /work/telcam.yaml"]
