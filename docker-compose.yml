@@ -33,6 +33,8 @@ services:
         ! register stellarium localhost pyobs ;
         ! register scratch localhost pyobs ;
         ! register console localhost pyobs ;
+        ! register stellarium2 localhost pyobs ;
+        ! register indi localhost pyobs ;
         srg_create all localhost all all all ;
         srg_user_add @all@ localhost all localhost
     healthcheck:
