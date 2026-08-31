@@ -99,6 +99,14 @@ Written down because none of them produce a useful error message.
 - **A restart resets the mount to `telcam.yaml`'s `position:`** (Polaris). A
   slew that "arrives instantly" after a restart is that, not a bug.
 
+## Related repos
+
+- [pyobs-stellarium-bridge](https://github.com/MichaelJEvan/pyobs-stellarium-bridge):
+  puts any pyobs telescope on a Stellarium sky chart.
+- [pyobs-indi](https://github.com/MichaelJEvan/pyobs-indi):
+  drives INDI mounts from pyobs. This container is the easiest way to try
+  both without hardware.
+
 ## License
 
 MIT.
