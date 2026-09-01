@@ -3,6 +3,18 @@
 # One process running both modules, each with its own XMPP account.
 class: pyobs.modules.MultiModule
 
+# The vfs must live HERE, not on the camera module below: get_object's
+# own-vfs check looks for "_vfs" while YAML defines "vfs", so a child's
+# vfs config is silently replaced by the parent's (measured 2026-08-31,
+# pyobs-core 2.1.0). At top level the parent IS the one with the cache
+# root and the children inherit it, which sidesteps the bug.
+vfs:
+  class: pyobs.vfs.VirtualFileSystem
+  roots:
+    cache:
+      class: pyobs.vfs.LocalFile
+      root: /work/cache
+
 modules:
 
   telescope:
@@ -26,9 +38,3 @@ modules:
       jid: camera@localhost
       server: ejabberd:5222
       password: pyobs
-    vfs:
-      class: pyobs.vfs.VirtualFileSystem
-      roots:
-        cache:
-          class: pyobs.vfs.LocalFile
-          root: /work/cache
