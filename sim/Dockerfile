@@ -2,7 +2,7 @@
 # RA/Dec during mid-slew ticks, so a live reader sees the mount move.
 # Python 3.11 because the ecosystem wants >=3.11,<3.14.
 FROM python:3.11-slim
-ARG PYOBS_VERSION=2.0.1
+ARG PYOBS_VERSION=2.1.0
 
 # [full], not bare pyobs-core. A default install cannot take an exposure:
 # DummyCamera._simulate_image imports photutils to paint its star field, and
