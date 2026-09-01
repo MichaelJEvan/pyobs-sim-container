@@ -1,9 +1,11 @@
 # pyobs 2.0 simulator
 
-A containerised pyobs observatory — one simulated telescope, one simulated
-camera, and the XMPP server they talk through. It exists so software that
-drives pyobs can be developed and tested without an observatory, and it starts
-in one command.
+A containerised pyobs observatory — a complete simulated observatory and the
+XMPP server it talks through: two telescopes (night and solar), a camera, a
+spectrograph, a video camera, a roll-off roof, autofocus, autoguiding, fine
+acquisition, and a robotic scheduler with its mastermind. Every dummy module
+pyobs ships, on one bus. It exists so software that drives pyobs can be
+developed and tested without an observatory, and it starts in one command.
 
 Built for the [Stellarium ↔ pyobs bridge](https://github.com/MichaelJEvan/pyobs-stellarium-bridge),
 but there is nothing bridge-specific in it. Anything that speaks pyobs can
@@ -15,9 +17,9 @@ point at it.
 docker compose up -d
 ```
 
-That is the whole setup. Two containers come up, five XMPP accounts get
+That is the whole setup. Two containers come up, the XMPP accounts get
 registered, and a `DummyRaDecTelescope` sits at Polaris waiting to be told
-where to go.
+where to go — with the rest of the simulated observatory alongside it.
 
 ```bash
 docker compose logs -f sim     # watch it
@@ -29,10 +31,19 @@ XMPP is on **localhost:5222**. Point your client at it.
 | account | for |
 |---|---|
 | `telescope` | the simulated mount |
+| `solar` | the simulated solar telescope |
 | `camera` | the simulated camera |
-| `stellarium` | free, for a client |
-| `scratch` | free, for a client |
-| `console` | free, for a client |
+| `spectrograph` | the simulated spectrograph |
+| `video` | the simulated video camera |
+| `roof` | the simulated roll-off roof |
+| `autofocus` | the simulated focus routine |
+| `guiding` | the simulated autoguider |
+| `acquisition` | the simulated fine-pointing |
+| `scheduler` | the simulated scheduler |
+| `mastermind` | the simulated night-runner |
+| `indi` | for a [pyobs-indi](https://github.com/MichaelJEvan/pyobs-indi) module, if you run one |
+| `stellarium`, `stellarium2` | free, for clients |
+| `scratch`, `console`, `gui` | free, for clients |
 
 They all share one password: `pyobs`. These are localhost-only accounts in a
 throwaway container, and the password is the one pyobs uses in its own
@@ -71,7 +82,7 @@ and a client has to be on a version that talks to the module.
 | `docker-compose.yml` | the two services and how they wait for each other |
 | `sim/Dockerfile` | Python 3.11 plus a pinned pyobs-core |
 | `ejabberd/ejabberd.yml` | the XMPP server config, from pyobs's own `tests/xmpp/` |
-| `work/telcam.yaml` | the telescope and camera modules |
+| `work/telcam.yaml` | all the observatory's modules |
 | `work/_environment.example.yaml` | the default observing site |
 
 ## Things that cost an afternoon
