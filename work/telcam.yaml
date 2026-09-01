@@ -38,3 +38,81 @@ modules:
       jid: camera@localhost
       server: ejabberd:5222
       password: pyobs
+
+  # The rest of the closet: every dummy pyobs ships, one XMPP account each,
+  # all self-contained (constructors need no references). Here so every
+  # client (pyobs-gui, Polaris, NorthStar someday) has a full observatory
+  # to discover.
+
+  roof:
+    class: pyobs.modules.roof.DummyRoof
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: roof@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  scheduler:
+    class: pyobs.modules.robotic.DummyScheduler
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: scheduler@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  mastermind:
+    class: pyobs.modules.robotic.DummyMastermind
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: mastermind@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  autofocus:
+    class: pyobs.modules.focus.DummyAutoFocus
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: autofocus@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  guiding:
+    class: pyobs.modules.pointing.DummyAutoGuiding
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: guiding@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  acquisition:
+    class: pyobs.modules.pointing.DummyAcquisition
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: acquisition@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  solar:
+    class: pyobs.modules.telescope.DummySolarTelescope
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: solar@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  spectrograph:
+    class: pyobs.modules.camera.DummySpectrograph
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: spectrograph@localhost
+      server: ejabberd:5222
+      password: pyobs
+
+  video:
+    # Not exported from pyobs.modules.camera like its siblings; full path needed.
+    class: pyobs.modules.camera.dummyvideo.DummyVideo
+    comm:
+      class: pyobs.comm.xmpp.XmppComm
+      jid: video@localhost
+      server: ejabberd:5222
+      password: pyobs
