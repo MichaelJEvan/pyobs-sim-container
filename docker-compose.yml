@@ -36,6 +36,8 @@ services:
         ! register stellarium2 localhost pyobs ;
         ! register indi localhost pyobs ;
         ! register gui localhost pyobs ;
+        ! register northstar localhost pyobs ;
+        ! register indisim localhost pyobs ;
         ! register roof localhost pyobs ;
         ! register scheduler localhost pyobs ;
         ! register mastermind localhost pyobs ;
