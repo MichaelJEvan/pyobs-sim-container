@@ -1,8 +1,12 @@
-# pyobs 2.0.1 -- includes the #820 fix: the dummy telescope now publishes
-# RA/Dec during mid-slew ticks, so a live reader sees the mount move.
+# pyobs 2.3.0 -- carries the #850 fix (AltitudeLimitError is a plain PyobsError,
+# not a MotionError, so repeated below-horizon refusals no longer escalate the
+# module into ERROR). Also has the #820 mid-slew RA/Dec publishing. Bumped from
+# 2.1.1 after diffing 2.1.1->2.3.0: only basetelescope/module/dummycamera touch
+# our surfaces, all safe (see the version bump notes). Keep this ARG and the
+# Mac pyobs-2.0 conda env on the SAME version -- they must not drift apart.
 # Python 3.11 because the ecosystem wants >=3.11,<3.14.
 FROM python:3.11-slim
-ARG PYOBS_VERSION=2.1.1
+ARG PYOBS_VERSION=2.3.0
 
 # [full], not bare pyobs-core. A default install cannot take an exposure:
 # DummyCamera._simulate_image imports photutils to paint its star field, and
